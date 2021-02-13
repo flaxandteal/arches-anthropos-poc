@@ -1,4 +1,4 @@
-FROM getty/arches:5.0
+FROM arches:5.1.0
 
 RUN useradd arches
 RUN chgrp arches ../entrypoint.sh && chmod g+rx ../entrypoint.sh
