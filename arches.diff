@@ -1,0 +1,53 @@
+diff --git a/Dockerfile b/Dockerfile
+index 4cb83802c..fbf1d8dd6 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -74,6 +74,7 @@ RUN set -ex \
+         python3.8-distutils \
+         python3.8-venv \
+     " \
++    && apt-get update -y \
+     && apt-get install -y --no-install-recommends curl \
+     && curl -sL https://deb.nodesource.com/setup_10.x | bash - \
+     && curl -sL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
+@@ -86,9 +87,9 @@ RUN set -ex \
+     && npm install -g yarn
+ 
+ # Install Yarn components
+-COPY ./arches/install/package.json ${ARCHES_ROOT}/arches/install/package.json
+-COPY ./arches/install/.yarnrc ${ARCHES_ROOT}/arches/install/.yarnrc
+-COPY ./arches/install/yarn.lock ${ARCHES_ROOT}/arches/install/yarn.lock
++COPY ./arches/install/arches-templates/project_name/package.json ${ARCHES_ROOT}/arches/install/package.json
++COPY ./arches/install/arches-templates/project_name/.yarnrc ${ARCHES_ROOT}/arches/install/.yarnrc
++# COPY ./arches/install/arches-templates/project_name/yarn.lock ${ARCHES_ROOT}/arches/install/yarn.lock
+ WORKDIR ${ARCHES_ROOT}/arches/install
+ RUN mkdir -p ${ARCHES_ROOT}/arches/app/media/packages
+ RUN yarn install
+diff --git a/arches/install/arches-templates/project_name/package.json b/arches/install/arches-templates/project_name/package.json
+index 9e875418f..54616ec03 100644
+--- a/arches/install/arches-templates/project_name/package.json
++++ b/arches/install/arches-templates/project_name/package.json
+@@ -1,6 +1,6 @@
+ {
+-    "name": "{{ project_name }}",
++    "name": "fatdemo",
+     "dependencies": {
+-        "arches": "archesproject/arches#{{ arches_version }}"
++        "arches": "archesproject/arches#5.0.0"
+     }
+ }
+diff --git a/docker-compose.yml b/docker-compose.yml
+index aaf1655d8..2a4e728f4 100644
+--- a/docker-compose.yml
++++ b/docker-compose.yml
+@@ -42,8 +42,8 @@ services:
+       image: cvast/cvast-nginx:1.2.0
+       restart: unless-stopped
+       ports:
+-        - '80:80'
+-        - '443:443'
++        - '8080:80'
++        - '4430:443'
+       volumes:
+         - arches-static:/www/static
+         - letsencrypt-acme-challenge:/var/www
